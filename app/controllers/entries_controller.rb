@@ -15,7 +15,7 @@ class EntriesController < ApplicationController
 
   # POST /entries
   def create
-    @entry = Entry.new(entry_params)
+    @entry = Entry.find_or_create_by(entry_params)
 
     if @entry.save
       render json: @entry, status: :created, location: @entry
@@ -26,6 +26,7 @@ class EntriesController < ApplicationController
 
   # PATCH/PUT /entries/1
   def update
+    @entry = Entry.find_by(id: params[:id])
     if @entry.update(entry_params)
       render json: @entry
     else
@@ -46,6 +47,6 @@ class EntriesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def entry_params
-      params.require(:entry).permit(:date, :feather, :stone)
+      params.require(:entry).permit(:date, :feather, :stone, :user_id)
     end
 end
